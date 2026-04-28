@@ -6,17 +6,24 @@ Encapsular una familia de algoritmos intercambiables detras de una interfaz comu
 
 ## Problema que resuelve
 
-Una clase acumula condicionales para elegir algoritmos. Cada nueva variante obliga a modificar esa clase.
+Una clase acumula condicionales para elegir algoritmos. Cada nueva variante obliga a modificar esa clase y aumenta el acoplamiento.
 
 ## Idea de solucion
 
-El contexto delega el calculo en una estrategia configurable. Cada algoritmo vive en una clase concreta.
+El contexto delega el algoritmo en una interfaz `Strategy`. Las estrategias concretas implementan variantes del algoritmo y pueden asignarse por constructor, reemplazarse en runtime o seleccionarse mediante una factory.
 
-## Interaccion entre clases
+## Variantes implementadas
 
-`Cart.total()` llama `strategy.apply(price)`. Cambiar la estrategia cambia el algoritmo sin modificar `Cart`.
+- `Ejemplo 1 - Implementacion Generica`: estructura minima del patron.
+- `Ejemplo 2 - solucion para criterios de ordenamiento`: estrategia aplicada a ordenamiento.
+- `Ejemplo 3 - solucion para calculo de rutas`: estrategia aplicada a rutas.
+- `Ejemplo 4 - Strategy intercambiable en runtime`: el contexto cambia de estrategia durante la ejecucion.
+- `Ejemplo 5 - Strategy seleccionado por factory`: una factory/mapa selecciona la estrategia antes de entregarla al contexto.
 
-El archivo `UML.puml` contiene dos vistas: un diagrama de clases, que muestra la estructura estatica, y un diagrama de secuencia, que muestra el flujo de mensajes entre objetos durante una ejecucion tipica.
+## Utilidades concretas
+
+- **Intercambio en runtime:** adecuado cuando el usuario, configuracion o estado del sistema cambia el algoritmo activo durante la ejecucion.
+- **Seleccion por factory/mapa:** adecuado cuando un codigo, tipo o entrada externa debe resolverse a una estrategia concreta sin llenar el contexto de condicionales.
 
 ## Palabras clave para reconocerlo
 
@@ -26,46 +33,9 @@ El archivo `UML.puml` contiene dos vistas: un diagrama de clases, que muestra la
 - `contexto`
 - `politica`
 - `seleccion dinamica`
+- `factory de estrategias`
+- `cambio en runtime`
 
-## Implementacion Java
+## Criterio academico
 
-Cada clase esta separada en un archivo para que la estructura del patron sea visible:
-
-- `src/Cart.java`
-- `src/DiscountStrategy.java`
-- `src/Main.java`
-- `src/NoDiscount.java`
-- `src/PercentageDiscount.java`
-
-Para compilar y ejecutar desde esta carpeta:
-
-```bash
-javac -encoding UTF-8 src/*.java
-java -cp src Main
-```
-
-## Tres ejemplos de aplicacion
-
-### Ejemplo 1: Implementacion Generica
-
-**Problematica:** se necesita estudiar la estructura esencial del patron sin ruido accidental de un dominio especifico.
-
-**Como la atiende el patron:** muestra la estructura basica para intercambiar algoritmos en un contexto.
-
-### Ejemplo 2: Criterios de ordenamiento
-
-**Problematica:** el usuario cambia entre precio y relevancia.
-
-**Como la atiende el patron:** cada criterio es una estrategia intercambiable.
-
-### Ejemplo 3: Calculo de rutas
-
-**Problematica:** la ruta puede optimizar rapidez o costo.
-
-**Como la atiende el patron:** el navegador delega en la estrategia seleccionada.
-
-## Otras situaciones donde puede usarse
-
-- Politicas de calculo intercambiables.
-- Ranking u ordenamiento configurable.
-- Reglas de negocio variables.
+La senal central es que el comportamiento variable es un algoritmo completo, no solo un dato. El contexto conserva la responsabilidad de coordinar el caso de uso, pero delega la parte variable en una abstraccion.

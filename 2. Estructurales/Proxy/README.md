@@ -2,21 +2,33 @@
 
 ## Proposito
 
-Usar un sustituto con la misma interfaz para controlar el acceso a un objeto real.
+Usar un sustituto con la misma interfaz que el objeto real para controlar su acceso, su costo, su seguridad, su ubicacion o su ciclo de vida.
 
 ## Problema que resuelve
 
-El objeto real puede ser costoso, remoto, protegido o requerir control de ciclo de vida.
+El cliente necesita trabajar con un objeto, pero acceder directamente a el puede ser caro, inseguro, remoto, repetitivo o requerir administracion adicional.
 
 ## Idea de solucion
 
-El proxy implementa la misma interfaz que el sujeto real y decide cuando crear, validar, cachear o delegar.
+El proxy implementa la misma interfaz que el sujeto real. El cliente usa esa interfaz comun y el proxy decide si crea el objeto real, valida permisos, cachea resultados, registra accesos o encapsula una llamada remota.
 
-## Interaccion entre clases
+## Utilidades concretas del Proxy
 
-`LazyImageProxy.display()` recibe la llamada del cliente. Si la imagen real no existe, la crea; luego delega en `HighResolutionImage`.
+- **Proxy virtual o de ahorro:** retrasa la creacion de objetos costosos hasta que se necesitan.
+- **Proxy de proteccion o seguridad:** valida permisos antes de delegar al sujeto real.
+- **Proxy remoto:** representa localmente un objeto ubicado en otro proceso, servidor o servicio.
+- **Proxy de cache:** evita repetir operaciones costosas guardando resultados.
+- **Proxy inteligente:** agrega administracion adicional como conteo de referencias, logging, metricas o control de ciclo de vida.
 
-El archivo `UML.puml` contiene dos vistas: un diagrama de clases, que muestra la estructura estatica, y un diagrama de secuencia, que muestra el flujo de mensajes entre objetos durante una ejecucion tipica.
+## Ejemplos implementados
+
+- `Ejemplo 1 - Implementacion Generica`: estructura minima del patron.
+- `Ejemplo 2 - solucion para servicio remoto`: proxy con cache delante de un servicio de reportes.
+- `Ejemplo 3 - solucion para documentos protegidos`: proxy de proteccion por rol.
+- `Ejemplo 4 - Proxy virtual para ahorro de recursos`: carga diferida de videos pesados.
+- `Ejemplo 5 - Proxy inteligente para conteo de uso`: conteo de accesos antes de delegar.
+- `Ejemplo 6 - Proxy de cache para consultas costosas`: cache transparente para consultas repetidas.
+- `Ejemplo 7 - Proxy remoto para servicio externo`: representacion local de un servicio externo.
 
 ## Palabras clave para reconocerlo
 
@@ -27,45 +39,10 @@ El archivo `UML.puml` contiene dos vistas: un diagrama de clases, que muestra la
 - `cache`
 - `objeto remoto`
 - `proteccion`
+- `logging`
+- `metricas`
+- `ciclo de vida`
 
-## Implementacion Java
+## Criterio academico
 
-Cada clase esta separada en un archivo para que la estructura del patron sea visible:
-
-- `src/HighResolutionImage.java`
-- `src/Image.java`
-- `src/LazyImageProxy.java`
-- `src/Main.java`
-
-Para compilar y ejecutar desde esta carpeta:
-
-```bash
-javac -encoding UTF-8 src/*.java
-java -cp src Main
-```
-
-## Tres ejemplos de aplicacion
-
-### Ejemplo 1: Implementacion Generica
-
-**Problematica:** se necesita estudiar la estructura esencial del patron sin ruido accidental de un dominio especifico.
-
-**Como la atiende el patron:** muestra la estructura basica para controlar el acceso a un sujeto real.
-
-### Ejemplo 2: Servicio remoto
-
-**Problematica:** consultar reportes remotos es costoso.
-
-**Como la atiende el patron:** el proxy agrega cache sin cambiar la interfaz del servicio.
-
-### Ejemplo 3: Documentos protegidos
-
-**Problematica:** el acceso debe validarse antes de abrir el documento real.
-
-**Como la atiende el patron:** el proxy controla permisos y luego delega.
-
-## Otras situaciones donde puede usarse
-
-- Carga diferida de recursos pesados.
-- Control de permisos.
-- Caches transparentes.
+La senal central es que el cliente cree estar usando el sujeto real porque ambos comparten interfaz, pero en realidad interactua con un intermediario que agrega una politica de acceso. Si el intermediario no conserva la misma interfaz, probablemente se trata de Adapter, Facade u otro patron estructural, no de Proxy.
